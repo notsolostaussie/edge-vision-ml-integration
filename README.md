@@ -1,14 +1,20 @@
 # Edge Vision ML Integration
 
-This is a compact reconstruction of an edge-AI image-processing pipeline developed as part of an autonomous-systems engineering project.
-The goal was to identify via live vision from an inflight drone, the open or closed position of lever valves, 
-the pressure on gauges as displayed, and identify any arUco marker information as detected.
+A compact reconstruction of an edge-AI image-processing pipeline developed
+as part of an autonomous-systems engineering project.
+
+The original subsystem was designed to process live UAV imagery to identify
+open/closed lever valves, interpret analogue pressure gauges, detect ArUco
+markers and provide processed visual information to downstream system
+components.
 
 ## Public demonstration
 
-This repository contains a small public reconstruction of the image-processing pipeline developed during the original engineering project.
+This repository contains a small public reconstruction of the image-processing
+pipeline developed during the original engineering project.
 
-The demonstration is intentionally limited to the core integration concept rather than reproducing the complete project source.
+The demonstration is intentionally limited to the core integration concept
+rather than reproducing the complete project source.
 
 The pipeline combines:
 
@@ -17,6 +23,24 @@ The pipeline combines:
 3. Project-specific gauge interpretation
 4. Annotated image/video output
 5. Structured JSON results suitable for use by another subsystem
+
+## Original project context
+
+The original image-processing subsystem formed part of a UAV payload system
+using a Raspberry Pi and OAK-D Lite camera.
+
+The subsystem was required to:
+
+- acquire and process live imagery;
+- detect and classify target objects;
+- distinguish open and closed valve states;
+- interpret analogue pressure gauges;
+- detect ArUco markers;
+- provide annotated video and target information to other system components.
+
+The original software architecture used separate Python functions and scripts
+running on Raspberry Pi OS, with the image-processing subsystem integrated
+with other project subsystems through defined data interfaces.
 
 ## Object classes
 
@@ -29,9 +53,30 @@ The original object-detection model used six labelled classes:
 - `Open`
 - `Tip`
 
-The demonstration accepts an image, video file or webcam stream and passes each frame through the model.
+The demonstration accepts an image, video file or webcam stream and passes
+each frame through the model.
 
-Detected objects are converted into structured results while conventional computer-vision processing is used where it is better suited than machine learning.
+Detected objects are converted into structured results while conventional
+computer-vision processing is used where it is better suited than machine
+learning.
+
+## Dataset and model development
+
+The original YOLOv5 model was developed using images captured with the
+OAK-D Lite camera under conditions representative of the intended test
+environment.
+
+The dataset was labelled for valve state, gauge components and marker
+detection, then iteratively reviewed after early testing identified uneven
+representation between some classes.
+
+Additional training images were introduced to improve representation of the
+`Open` class. ArUco marker detection was subsequently handled using OpenCV
+rather than relying on the ML `Marker` class, providing a more appropriate
+deterministic solution for that task.
+
+The complete training dataset and original model weights are not included in
+this repository.
 
 ## Image-processing pipeline
 
@@ -55,6 +100,10 @@ Image / video / camera
           v
    Structured JSON output
 ```
+The original system followed the same general processing flow: live OAK-D
+video was passed through the object-detection model, followed by OpenCV
+processing for ArUco detection, gauge-value conversion and visual annotation
+before results were made available to downstream interfaces.
 
 ## Gauge interpretation
 
@@ -75,6 +124,41 @@ This repository does not reproduce the external OpenCV analog-gauge-reader imple
 ArUco marker detection is performed separately using OpenCV rather than the ML model.
 
 This reflects an engineering decision from the original project: marker detection was better handled using an established deterministic computer-vision algorithm rather than relying on the trained object detector.
+
+## Testing and validation
+
+The original subsystem was tested at both unit and integration level.
+
+Testing included:
+- YOLOv5 model training and validation;
+- physical testing against real target imagery;
+- valve open/closed classification;
+- analogue gauge interpretation;
+- ArUco marker detection;
+- live video transmission;
+- integration with downstream project functions.
+
+Individual tests demonstrated working object detection, valve-state
+classification and gauge processing. Live video transmission and Raspberry Pi
+operation were also demonstrated during integration testing.
+
+Not all planned end-to-end functionality was successfully demonstrated during
+the final acceptance test.
+
+## Engineering lessons
+
+A key limitation identified during final integration was reliance on an
+external Roboflow authentication service.
+Although individual image-processing functions had previously been tested,
+failure of this external dependency prevented part of the object-detection
+pipeline from operating during final system integration.
+
+This highlighted several practical engineering lessons:
+- avoid unnecessary single points of failure;
+- distinguish successful model testing from successful system integration;
+- validate deployment dependencies before final acceptance testing;
+- provide diagnostic and fallback mechanisms for critical inference services;
+- prefer local processing where system reliability requires it.
 
 ## Installation
 
