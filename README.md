@@ -1,6 +1,8 @@
 # Edge Vision ML Integration
 
-A compact reconstruction of an edge-AI image-processing pipeline developed as part of an autonomous-systems engineering project.
+This is a compact reconstruction of an edge-AI image-processing pipeline developed as part of an autonomous-systems engineering project.
+The goal was to identify via live vision from an inflight drone, the open or closed position of lever valves, 
+the pressure on gauges as displayed, and identify any arUco marker information as detected.
 
 ## Public demonstration
 
