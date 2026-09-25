@@ -28,7 +28,7 @@ def gauge_angle_to_bar(theta):
     return 0.0344 * theta - 1.2
 
 
-def detect_aruco(frame):
+def detect_aruco(frame, annotated):
     if not hasattr(cv2, "aruco"):
         return []
 
@@ -49,7 +49,7 @@ def detect_aruco(frame):
     if ids is None:
         return []
 
-    aruco.drawDetectedMarkers(frame, corners, ids)
+    aruco.drawDetectedMarkers(annotated, corners, ids)
     return ids.flatten().astype(int).tolist()
 
 
@@ -101,7 +101,7 @@ def process_frame(model, frame):
     detections = parse_detections(result)
     annotated = result.plot()
 
-    marker_ids = detect_aruco(annotated)
+    marker_ids = detect_aruco(frame, annotated)
     gauge = calculate_gauge(detections)
 
     if gauge is not None:

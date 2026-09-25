@@ -222,7 +222,11 @@ Press `q` to stop video or webcam inference.
 
 This repository is a public reconstruction of the original image-processing architecture rather than a copy of the complete engineering project.
 
-The original trained model weights are not included.
+The original trained model weights are not publicly distributed with this repository. 
+
+Running ML inference therefore requires compatible YOLO weights using the six documented classes. 
+
+The repository demonstrates the model integration, image-processing and system-interface architecture rather than distributing the original trained model.
 
 The implementation is designed to operate with compatible YOLO weights trained using the documented six-class dataset.
 
